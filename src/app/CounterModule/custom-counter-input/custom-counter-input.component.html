@@ -1,0 +1,11 @@
+<div>
+    <div class="my-3">
+        {{$any(topic$ | async)}}
+    </div>
+    <input type="text" placeholder="enter value" [(ngModel)]="value">
+    <button class="btn btn-primary" (click)="onAdd()">Add to continue</button>
+</div>
+
+<div>
+    <button class="btn btn-primary" (click)="onChangeTopic()">Change topic</button>
+</div>
