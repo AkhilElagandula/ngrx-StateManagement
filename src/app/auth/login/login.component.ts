@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AppState } from 'src/app/store/app.state';
+import { Store } from '@ngrx/store';
+import { loginStart } from '../state/auth.actions';
+import { setLoadingSpinner } from 'src/app/store/shared/shared.actions';
 
 @Component({
   selector: 'app-login',
@@ -9,7 +13,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
 
-  constructor() { }
+  constructor(private store: Store<AppState>) { }
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
@@ -24,7 +28,10 @@ export class LoginComponent implements OnInit {
   }
 
   onLoginSubmit() {
-    console.log(this.loginForm);
+    const email = this.email.value;
+    const password = this.password.value;
+    this.store.dispatch(setLoadingSpinner({ stats: true }));
+    this.store.dispatch(loginStart({ email, password }));
   }
 
   get email() {
