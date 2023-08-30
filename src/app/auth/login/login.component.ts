@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
   onLoginSubmit() {
     const email = this.email.value;
     const password = this.password.value;
-    this.store.dispatch(setLoadingSpinner({ stats: true }));
+    this.store.dispatch(setLoadingSpinner({ status: true }));
     this.store.dispatch(loginStart({ email, password }));
   }
 

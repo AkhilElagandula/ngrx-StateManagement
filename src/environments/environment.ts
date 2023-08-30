@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   FIREBASE_API_KEY: 'AIzaSyA9HEOZrRHZP026VQObeDz2PVD_GLpMV50'
+  // FIREBASE_API_KEY: 'AIzaSyATzKHALEM0F8XEJ9fld9KiMs2ddCy5hJY'
 };
 
 /*
