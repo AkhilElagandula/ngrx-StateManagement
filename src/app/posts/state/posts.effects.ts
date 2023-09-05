@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
-import { Actions, createEffect, ofType } from "@ngrx/effects";
+import { Actions, act, createEffect, ofType } from "@ngrx/effects";
 import { PostsService } from "src/app/services/posts.service";
-import { addPosts, addPostsSuccess, loadPosts, loadPostsSuccess } from "./posts.actions";
-import { map, mergeMap, tap } from "rxjs/operators";
+import { addPosts, addPostSuccess, deletePost, deletePostSuccess, loadPosts, loadPostsSuccess, updatePost, updatePostSuccess } from "./posts.actions";
+import { map, mergeMap, switchMap, tap } from "rxjs/operators";
 import { Router } from "@angular/router";
 
 @Injectable()
@@ -33,16 +33,42 @@ export class PostsEffects {
                 return this.postService.addPosts(action.post).pipe(
                     map((data) => {
                         const post = { ...action.post, id: data.name };
-                        return addPostsSuccess({ post, redirect: true });
+                        return addPostSuccess({ post, redirect: true });
                     })
                 );
             })
         );
     });
 
+    updatePost$ = createEffect(() => {
+        return this.action$.pipe(
+            ofType(updatePost),
+            switchMap((action) => {
+                return this.postService.updatePosts(action.post).pipe(
+                    map((data) => {
+                        return updatePostSuccess({ post: action.post });
+                    })
+                );
+            })
+        );
+    });
+
+    deletePost$ = createEffect(() => {
+        return this.action$.pipe(
+            ofType(deletePost),
+            switchMap((action) => {
+                return this.postService.deletePost(action.id).pipe(
+                    map((data) => {
+                        return deletePostSuccess({ id: action.id })
+                    })
+                );
+            })
+        );
+    })
+    
     postRedirect$ = createEffect(() => {
         return this.action$.pipe(
-            ofType(addPostsSuccess),
+            ofType(addPostSuccess),
             tap((action) => {
                 if (action.redirect) {
                     this.router.navigate(['posts']);
