@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { Post } from 'src/app/models/posts.model';
 import { AppState } from 'src/app/store/app.state';
 import { addPosts } from '../state/posts.actions';
+import { setLoadingSpinner } from 'src/app/store/shared/shared.actions';
 
 @Component({
   selector: 'app-add-post',
@@ -36,6 +37,7 @@ export class AddPostComponent implements OnInit {
       title: this.postForm.value.title,
       description: this.postForm.value.description
     }
+    this.store.dispatch(setLoadingSpinner({ status: true }));
     this.store.dispatch(addPosts({ post }));
   }
 

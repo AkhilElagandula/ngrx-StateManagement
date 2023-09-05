@@ -27,7 +27,7 @@ export const updatePost = createAction(
 
 export const updatePostSuccess = createAction(
     UPDATE_POST_SUCCESS,
-    props<{ post: Post}>()
+    props<{ post: Post, redirect: boolean}>()
 )
 
 export const deletePost = createAction(

@@ -7,6 +7,7 @@ import { AppState } from 'src/app/store/app.state';
 import { getPostById, getPosts } from '../state/posts.selector';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { updatePost } from '../state/posts.actions';
+import { setLoadingSpinner } from 'src/app/store/shared/shared.actions';
 
 @Component({
   selector: 'app-edit-post',
@@ -18,21 +19,18 @@ export class EditPostComponent implements OnInit, OnDestroy {
   post: Post;
   postForm: FormGroup;
   postSubscription: Subscription;
-  constructor(
-    private route: ActivatedRoute,
-    private store: Store<AppState>,
-    private router: Router
-  ) { }
+  constructor(private store: Store<AppState>) { }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      const id = params['id'];
-      this.postSubscription = this.store
-        .select(getPostById, { id })
-        .subscribe(data => {
-          this.post = data;
-          this.createForm();
+    this.createForm();
+    this.postSubscription = this.store.select(getPostById).subscribe((post) => {
+      if (post) {
+        this.post = post;
+        this.postForm.patchValue({
+          title: post.title,
+          description: post.description
         });
+      }
     });
   }
 
@@ -44,11 +42,11 @@ export class EditPostComponent implements OnInit, OnDestroy {
 
   createForm() {
     this.postForm = new FormGroup({
-      title: new FormControl(this.post.title, [
+      title: new FormControl(null, [
         Validators.required,
         Validators.minLength(6)
       ]),
-      description: new FormControl(this.post.description, [
+      description: new FormControl(null, [
         Validators.required,
         Validators.minLength(10)
       ])
@@ -67,8 +65,8 @@ export class EditPostComponent implements OnInit, OnDestroy {
       title: title,
       description: description
     };
+    this.store.dispatch(setLoadingSpinner({ status: true }));
     this.store.dispatch(updatePost({ post }));
-    this.router.navigate(['posts']);
   }
 
   showDescriptionErrors() {

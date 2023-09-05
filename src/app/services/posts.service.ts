@@ -39,10 +39,20 @@ export class PostsService {
         );
     }
 
+    getPostById(id: string): Observable<Post> {
+        return this.http.get<Post>(
+            `https://vue-completecourse.firebaseio.com/posts/${id}.json`
+        )
+    }
+
     deletePost(id: string) {
         return this.http.delete(
             `https://vue-completecourse.firebaseio.com/posts/${id}.json`
         );
+    }
+
+    getErrorMessage(message: string) {
+        return message;
     }
 
 }
